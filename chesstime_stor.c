@@ -98,13 +98,13 @@ int main(int argc, char *argv[]) {
 
 	if (current.tv_sec == 0 && current.tv_nsec == 0) {
 
-	  bytes_written = writefile(fd, &offset, sizeof(offset));
+	  bytes_written = writefile(1, &offset, sizeof(offset));
 	  if (bytes_read < 0) {
 	    fprintf(stderr, "%s: Trouble returning the file offset.\n", __FUNCTION__);
 	    return -1;
 	  }
 
-	  bytes_written = writefile(fd, &indexno, sizeof(indexno));
+	  bytes_written = writefile(1, &indexno, sizeof(indexno));
 	  if (bytes_written < 0) {
 	    fprintf(stderr, "%s: Trouble returning the file index number.\n", __FUNCTION__);
 	    return -1;	  
