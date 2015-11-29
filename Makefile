@@ -3,7 +3,7 @@ CC=gcc
 
 all : chesstime_stor cts-gen_moves cts-count_games cts_lookup cts_insert
 
-chesstime_stor : chesstime_stor.o
+chesstime_stor : chesstime_stor.o readfile.o writefile.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(LIBS)
 
 cts-gen_moves : LIBS=-lrt
@@ -24,5 +24,5 @@ cts-count_moves : cts-count_games.o
 cts_lookup : cts_lookup.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(LIBS)
 
-cts_insert : cts_insert.o
+cts_insert : cts_insert.o writefile.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(LIBS)
