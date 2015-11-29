@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
 	indexno = 0;
       }
 
-      for (;;) {
+      do {
 
 	bytes_read = readfile(0, &current, sizeof(current));
 	if (bytes_read < 0) {
@@ -99,12 +99,17 @@ int main(int argc, char *argv[]) {
 	if (current.tv_sec == 0 && current.tv_nsec == 0) {
 
 	  bytes_written = writefile(fd, &offset, sizeof(offset));
-	  if (bytes_read < 0) return -1;
+	  if (bytes_read < 0) {
+	    fprintf(stderr, "%s: Trouble returning the file offset.\n", __FUNCTION__);
+	    return -1;
+	  }
 
 	  bytes_written = writefile(fd, &indexno, sizeof(indexno));
-	  if (bytes_written < 0) return -1;	  
+	  if (bytes_written < 0) {
+	    fprintf(stderr, "%s: Trouble returning the file index number.\n", __FUNCTION__);
+	    return -1;	  
+	  }
 
-	  break;
 	}
 
 	else {
@@ -117,7 +122,7 @@ int main(int argc, char *argv[]) {
 
 	}
 
-      }
+      } while (current.tv_sec != 0);
       
       break;
 
