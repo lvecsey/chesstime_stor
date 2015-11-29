@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 
   for (;;) {
 
-    bytes_read = read(0, &cmd, sizeof(u_int16_t));
+    bytes_read = read(0, &cmd, sizeof(cmd));
     if (bytes_read != sizeof(cmd)) return -1;
 
     switch (cmd) {
