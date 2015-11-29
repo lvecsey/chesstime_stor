@@ -33,8 +33,11 @@ int main(int argc, char *argv[]) {
   int retval;
 
   {
+
     u_int64_t offset;
     u_int16_t indexno;
+
+    long int num_lines = 0;
 
     cmd = CTS_INSERT;
 
@@ -48,9 +51,12 @@ int main(int argc, char *argv[]) {
 
       if (len>0) {
 	retval = sscanf(line, "%ld %ld", &current.tv_sec, &current.tv_nsec);
+	if (retval!=2) continue;
+	num_lines++;
 	bytes_written = writefile(7, &current, sizeof(struct timespec));
 	if (bytes_written != sizeof(struct timespec)) {
 	  fprintf(stderr, "%s: Failure sending timestamp.\n", __FUNCTION__);
+	  fprintf(stderr, "%s: Expected to write %ld bytes and got %ld\n", __FUNCTION__, sizeof(struct timespec), bytes_written);
 	  return -1;
 	}
       }
