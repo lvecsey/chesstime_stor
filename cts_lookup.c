@@ -29,16 +29,16 @@ int main(int argc, char *argv[]) {
   long int n;
 
   {
-    u_int64_t offset;
-    u_int16_t indexno;
+    u_int64_t r1 = offset;
+    u_int16_t r2 = indexno;
 
     unsigned char outbuf[12];
     
     cmd = CTS_LOOKUP;
 
     memcpy(outbuf, &cmd, 2);
-    memcpy(outbuf+2, &offset, 8);
-    memcpy(outbuf+10, &indexno, 2);
+    memcpy(outbuf+2, &r1, 8);
+    memcpy(outbuf+10, &r2, 2);
     bytes_sent = write(7, outbuf, sizeof(outbuf));
     if (bytes_sent != sizeof(outbuf)) {
       fprintf(stderr, "%s: Expected write of %ld bytes, got %ld.\n", __FUNCTION__, sizeof(outbuf), bytes_sent);
