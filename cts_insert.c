@@ -81,6 +81,7 @@ int main(int argc, char *argv[]) {
 
     if (debug) {
       printf("%ld %u\n", offset, indexno);
+      fflush(stdout);
     }
     else {
       bytes_written = writefile(1, buf, 10);
