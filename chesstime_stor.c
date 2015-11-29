@@ -110,7 +110,10 @@ int main(int argc, char *argv[]) {
 	else {
 
 	  bytes_written = writefile(fd, &current, sizeof(current));
-	  if (bytes_written < 0) return -1;
+	  if (bytes_written < 0) {
+            fprintf(stderr, "%s: Trouble appending timestamp data to index file.\n", __FUNCTION__);
+            return -1;
+          }
 
 	}
 
