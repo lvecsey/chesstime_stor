@@ -54,9 +54,8 @@ int main(int argc, char *argv[]) {
 	if (retval!=2) continue;
 	num_lines++;
 	bytes_written = writefile(7, &current, sizeof(struct timespec));
-	if (bytes_written != sizeof(struct timespec)) {
+	if (bytes_written < 0) {
 	  fprintf(stderr, "%s: Failure sending timestamp.\n", __FUNCTION__);
-	  fprintf(stderr, "%s: Expected to write %ld bytes and got %ld\n", __FUNCTION__, sizeof(struct timespec), bytes_written);
 	  return -1;
 	}
       }
@@ -66,13 +65,16 @@ int main(int argc, char *argv[]) {
     current.tv_sec = 0;
     current.tv_nsec = 0;
     bytes_written = writefile(7, &current, sizeof(struct timespec));
-    if (bytes_written != sizeof(struct timespec)) {
+    if (bytes_written < 0) {
       fprintf(stderr, "%s: Failure sending the NULL (final) timestamp.\n", __FUNCTION__);
       return -1;    
     }
 
-    bytes_read = read(6, buf, 10);
-    if (bytes_read != 10) return -1;
+    bytes_read = readfile(6, buf, 10);
+    if (bytes_read < 0) {
+      fprintf(stderr, "%s: Trouble reading the byte offset and indexno from server.\n", __FUNCTION__);
+      return -1;
+    }
 
     memcpy(&offset, buf, sizeof(u_int64_t));
     memcpy(&indexno, buf+8, sizeof(u_int16_t));
@@ -82,7 +84,7 @@ int main(int argc, char *argv[]) {
     }
     else {
       bytes_written = writefile(1, buf, 10);
-      if (bytes_written != 10) {
+      if (bytes_written < 0) {
 	fprintf(stderr, "%s: Failure writing the binary result to terminal.\n", __FUNCTION__);
 	return -1;
       }
