@@ -1,8 +1,12 @@
 
 CC=gcc
-LIBS=-lrt
 
-all : cts-gen_moves cts-count_games
+all : chesstime_stor cts-gen_moves cts-count_games cts_lookup cts_insert
+
+chesstime_stor : chesstime_stor.o
+	$(CC) -o $@ $^ $(LDFLAGS) $(LIBS)
+
+cts-gen_moves : LIBS=-lrt
 
 cts-gen_moves : cts-gen_moves.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(LIBS)
@@ -16,3 +20,9 @@ cts-count_moves : cts-count_games.o
 	./cts-gen_moves 17 >> $@
 	./cts-gen_moves 55 >> $@
 	./cts-gen_moves 33 >> $@
+
+cts_lookup : cts_lookup.o readfile.o
+	$(CC) -o $@ $^ $(LDFLAGS) $(LIBS)
+
+cts_insert : cts_insert.o
+	$(CC) -o $@ $^ $(LDFLAGS) $(LIBS)
