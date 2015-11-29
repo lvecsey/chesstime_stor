@@ -35,13 +35,10 @@ The above example specifies a DEBUG environment variable which means some textua
 for the response will be displayed.
 
 Before any of the above tcpclient commands will connect, you need to establish a server.
-For production use Specify the path to the index files, such as /mnt/disk0_timestamps
+For production use, specify the path to the index files such as /mnt/disk0_timestamps
 
 <code>
   tcpserver -vRHl0 192.168.1.75 4250 ./chesstime_stor /tmp
 </code>
 
-This will run the server instance and access files such as timestamps_index0.dat, timestamps_index1.dat, etc.
-
-
-
+This will run the server instance for read/write to files such as timestamps_index0.dat, timestamps_index1.dat, etc.
