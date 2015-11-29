@@ -91,27 +91,26 @@ int main(int argc, char *argv[]) {
       for (;;) {
 
 	bytes_read = readfile(0, &current, sizeof(current));
-	if (bytes_read != sizeof(current)) {
+	if (bytes_read < 0) {
           fprintf(stderr, "%s: Trouble reading timestamp.\n", __FUNCTION__);
-          fprintf(stderr, "%s: Expected %ld bytes and got %ld.\n", __FUNCTION__, sizeof(current), bytes_read);
           return -1;
         }
 
 	if (current.tv_sec == 0 && current.tv_nsec == 0) {
 
 	  bytes_written = writefile(fd, &offset, sizeof(offset));
-	  if (bytes_read != sizeof(offset)) return -1;
+	  if (bytes_read < 0) return -1;
 
 	  bytes_written = writefile(fd, &indexno, sizeof(indexno));
-	  if (bytes_written != sizeof(indexno)) return -1;	  
+	  if (bytes_written < 0) return -1;	  
 
 	  break;
 	}
 
 	else {
 
-	  bytes_written = write(fd, &current, sizeof(current));
-	  if (bytes_written != sizeof(current)) return -1;
+	  bytes_written = writefile(fd, &current, sizeof(current));
+	  if (bytes_written < 0) return -1;
 
 	}
 
