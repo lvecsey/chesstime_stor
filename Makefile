@@ -21,7 +21,7 @@ cts-count_moves : cts-count_games.o
 	./cts-gen_moves 55 >> $@
 	./cts-gen_moves 33 >> $@
 
-cts_lookup : cts_lookup.o readfile.o
+cts_lookup : cts_lookup.o
 	$(CC) -o $@ $^ $(LDFLAGS) $(LIBS)
 
 cts_insert : cts_insert.o
