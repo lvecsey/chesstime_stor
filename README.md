@@ -22,15 +22,15 @@ In this way the timestamp data for roughly 12 billion chess games can be stored 
 
 --
 
-./cts_lookup and ./cts_insert and programs which work with tcpclient to access the microservice
+./cts_lookup and ./cts_insert are programs which work with tcpclient to access the microservice
 
 <code>
   tcpclient 192.168.1.75 4250 ./cts_lookup 656 0
-
   DEBUG=1 tcpclient 192.168.1.75 4250 ./cts_insert < sample_times.txt
 </code>
 
-The insertion is expected to give a response: a file offset in bytes, and file number.
+The insertion is expected to give a response: a file offset in bytes, and file number. If the chesstime_stor server reaches the maximum number of timestamps for an index file, it will attempt to create the next file. So it's up to the chesstime_stor instance to return back the actual offset and file that the provided timestamps were stored to.
+
 The above example specifies a DEBUG environment variable which means some textual output
 for the response will be displayed.
 
