@@ -30,6 +30,8 @@ int main(int argc, char *argv[]) {
 
   long int debug = getenv("DEBUG") != NULL;
 
+  int retval;
+
   {
     u_int64_t offset;
     u_int16_t indexno;
@@ -37,14 +39,20 @@ int main(int argc, char *argv[]) {
     cmd = CTS_INSERT;
 
     bytes_written = write(7, &cmd, sizeof(cmd));
-    if (bytes_written != sizeof(cmd)) return -1;
+    if (bytes_written != sizeof(cmd)) {
+      fprintf(stderr, "%s: Failure sending cmd.\n", __FUNCTION__);
+      return -1;
+    }
 
     while ((bytes_read = getline(&line, &len, fp)) != -1) {
 
       if (len>0) {
-	sscanf(line, "%ld %ld", &current.tv_sec, &current.tv_nsec);
-	bytes_written = write(7, &current, sizeof(struct timespec));
-	if (bytes_written != sizeof(struct timespec)) return -1;
+	retval = sscanf(line, "%ld %ld", &current.tv_sec, &current.tv_nsec);
+	bytes_written = writefile(7, &current, sizeof(struct timespec));
+	if (bytes_written != sizeof(struct timespec)) {
+	  fprintf(stderr, "%s: Failure sending timestamp.\n", __FUNCTION__);
+	  return -1;
+	}
       }
 
     }
@@ -52,7 +60,10 @@ int main(int argc, char *argv[]) {
     current.tv_sec = 0;
     current.tv_nsec = 0;
     bytes_written = writefile(7, &current, sizeof(struct timespec));
-    if (bytes_written != sizeof(struct timespec)) return -1;    
+    if (bytes_written != sizeof(struct timespec)) {
+      fprintf(stderr, "%s: Failure sending the NULL (final) timestamp.\n", __FUNCTION__);
+      return -1;    
+    }
 
     bytes_read = read(6, buf, 10);
     if (bytes_read != 10) return -1;
@@ -65,7 +76,10 @@ int main(int argc, char *argv[]) {
     }
     else {
       bytes_written = writefile(1, buf, 10);
-      if (bytes_written != 10) return -1;
+      if (bytes_written != 10) {
+	fprintf(stderr, "%s: Failure writing the binary result to terminal.\n", __FUNCTION__);
+	return -1;
+      }
     }
 
   }
