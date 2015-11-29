@@ -12,6 +12,8 @@
 
 #include "cts_stor.h"
 
+#include "writefile.h"
+
 int main(int argc, char *argv[]) {
 
   struct timespec current;
@@ -49,19 +51,22 @@ int main(int argc, char *argv[]) {
 
     current.tv_sec = 0;
     current.tv_nsec = 0;
-    bytes_written = write(7, &current, sizeof(struct timespec));
+    bytes_written = writefile(7, &current, sizeof(struct timespec));
     if (bytes_written != sizeof(struct timespec)) return -1;    
 
     bytes_read = read(6, buf, 10);
     if (bytes_read != 10) return -1;
 
     memcpy(&offset, buf, sizeof(u_int64_t));
-    memcpy(&indexno, buf, sizeof(u_int16_t));
+    memcpy(&indexno, buf+8, sizeof(u_int16_t));
 
     if (debug) {
       printf("%ld %u\n", offset, indexno);
     }
-    else write(1, buf, 10);
+    else {
+      bytes_written = writefile(1, buf, 10);
+      if (bytes_written != 10) return -1;
+    }
 
   }
 
