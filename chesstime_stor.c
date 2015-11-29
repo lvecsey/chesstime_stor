@@ -16,6 +16,9 @@
 
 #define MAX_FILESZ 94489280512
 
+#include "readfile.h"
+#include "writefile.h"
+
 int main(int argc, char *argv[]) {
 
   char *basepath = argc>1 ? argv[1] : DEFAULT_BASEPATH;
@@ -87,15 +90,15 @@ int main(int argc, char *argv[]) {
 
       for (;;) {
 
-	bytes_read = read(0, &current, sizeof(current));
+	bytes_read = readfile(0, &current, sizeof(current));
 	if (bytes_read != sizeof(current)) return -1;
 
 	if (current.tv_sec == 0 && current.tv_nsec == 0) {
 
-	  bytes_written = write(0, &offset, sizeof(offset));
+	  bytes_written = writefile(0, &offset, sizeof(offset));
 	  if (bytes_read != sizeof(offset)) return -1;
 
-	  bytes_written = write(0, &indexno, sizeof(indexno));
+	  bytes_written = writefile(0, &indexno, sizeof(indexno));
 	  if (bytes_written != sizeof(indexno)) return -1;	  
 
 	  break;
