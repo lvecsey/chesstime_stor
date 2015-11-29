@@ -8,6 +8,7 @@
 #include <fcntl.h>
 
 #include <sys/mman.h>
+#include <time.h>
 
 #include "cts_stor.h"
 
@@ -33,6 +34,9 @@ int main(int argc, char *argv[]) {
 
   ssize_t bytes_read;
   ssize_t bytes_written;
+
+  struct timespec current;
+  int retval;
 
   char filename[255];
 
@@ -67,6 +71,42 @@ int main(int argc, char *argv[]) {
       break;
 
     case CTS_INSERT:
+
+      {
+	struct stat buf;
+	retval = fstat(fd, &buf);
+	if (retval==-1) {
+	  perror("fstat");
+	  return -1;
+	}
+	offset = buf.st_size;
+	indexno = 0;
+      }
+
+      for (;;) {
+
+	bytes_read = read(0, &current, sizeof(current));
+	if (bytes_read != sizeof(current)) return -1;
+
+	if (current.tv_sec == 0 && current.tv_nsec == 0) {
+
+	  bytes_written = write(0, &offset, sizeof(offset));
+	  if (bytes_read != sizeof(offset)) return -1;
+
+	  bytes_written = write(0, &indexno, sizeof(indexno));
+	  if (bytes_written != sizeof(indexno)) return -1;	  
+
+	  break;
+	}
+
+	else {
+
+	  bytes_written = write(fd, &current, sizeof(current));
+	  if (bytes_written != sizeof(current)) return -1;
+
+	}
+
+      }
       
       break;
 
