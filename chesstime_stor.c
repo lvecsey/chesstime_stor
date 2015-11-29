@@ -14,6 +14,8 @@
 
 #define DEFAULT_BASEPATH "/mnt/disk0_timestamps"
 
+#define MAX_FILESZ 94489280512
+
 int main(int argc, char *argv[]) {
 
   char *basepath = argc>1 ? argv[1] : DEFAULT_BASEPATH;
