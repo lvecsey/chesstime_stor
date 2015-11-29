@@ -9,6 +9,8 @@
 
 #include <sys/mman.h>
 
+#include "cts_stor.h"
+
 #define DEFAULT_BASEPATH "/mnt/disk0_timestamps"
 
 int main(int argc, char *argv[]) {
@@ -47,15 +49,27 @@ int main(int argc, char *argv[]) {
     bytes_read = read(0, &cmd, sizeof(u_int16_t));
     if (bytes_read != sizeof(cmd)) return -1;
 
-    bytes_read = read(0, &offset, sizeof(offset));
-    if (bytes_read != sizeof(offset)) return -1;
+    switch (cmd) {
 
-    bytes_read = read(0, &indexno, sizeof(indexno));
-    if (bytes_read != sizeof(indexno)) return -1;
+    case CTS_LOOKUP:
 
-    bytes_read = pread(fd, buf, sizeof(buf), offset);
-    if (bytes_read > 0) {
-      bytes_written = write(1, buf, bytes_read);
+      bytes_read = read(0, &offset, sizeof(offset));
+      if (bytes_read != sizeof(offset)) return -1;
+
+      bytes_read = read(0, &indexno, sizeof(indexno));
+      if (bytes_read != sizeof(indexno)) return -1;
+
+      bytes_read = pread(fd, buf, sizeof(buf), offset);
+      if (bytes_read > 0) {
+	bytes_written = write(1, buf, bytes_read);
+      }
+
+      break;
+
+    case CTS_INSERT:
+      
+      break;
+
     }
 
   }
