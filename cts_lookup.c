@@ -10,8 +10,6 @@
 #include <sys/time.h>
 #include <string.h>
 
-#include "readfile.h"
-
 #include "cts_stor.h"
 
 int main(int argc, char *argv[]) {
